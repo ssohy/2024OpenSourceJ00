@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Mandalart</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/viewMandalart.css">
+</head>
+<body>
+    <div id="wrap">
+    <header id="main-header">
+        <a href="/">
+            <img src="/images/logo.svg" alt="logo" class="logo">
+        </a>
+        <button id="nav-toggle" class="nav-toggle">
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+        </button>
+        <nav id="main-navigation">
+            <ul class="menu">
+                <li class="menu-item"><button onclick="window.location.href='/mandalart'" class="nav-button active">My Mandalart</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/share'" class="nav-button">Share</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/calendar'" class="nav-button">Calendar</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/profile'" class="nav-button">Profile</button></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <script>
+        const tedolists = <%- JSON.stringify(tedolists) %>;
+    </script>    
+
+    <div class="header-container">
+        <h3>나의 만다라트</h3>
+        <img src="/images/edit.svg" alt="Edit" class="edit-icon" onclick="window.location.href='/mandalart/change/<%= mandalart.mandalart_id %>'">
+    </div>
+    <div class="container">
+        <div id="mandalart-grid" class="mandalart grid-<%= mandalart.tedolist_count %>"></div>
+        <div class="editContainer">
+            <div class="editContainerColor">
+                <% tedolists.forEach((tedolist, index) => { %>
+                    <input type="text" class="tedolist-detail-input" value="<%= tedolist.tedolist_detail %>" readonly />
+                    <input type="hidden" class="tedolist-number" value="<%= tedolist.tedolist_number %>" />
+                    <% if (checklists[tedolist.tedolist_number]) { %>
+                        <ul class="checklist" id="checklist-<%= tedolist.tedolist_number %>" style="display:none;">
+                            <% checklists[tedolist.tedolist_number].forEach(checklist => { %>
+                                <li><%= checklist.checklist_detail %></li>
+                            <% }); %>
+                        </ul>
+                    <% } %>
+                <% }); %>
+                <div id="checklist-container">
+                    <ul id="checklist-list"></ul>
+                </div>
+            </div>
+            <!-- 댓글 표시 영역 -->
+            <div id="comment-section">
+                <h4>댓글 (<span id="comment-count">0</span>)</h4>
+                <ul id="comment-list"></ul>
+                
+                <div id="new-comment-section">
+                    <textarea id="new-comment" placeholder="댓글을 입력하세요"></textarea>
+                    <button id="add-comment-button">댓글 작성</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="calendar-container">
+        <div id="calendar"></div>
+        <div id="details">
+            <h3>Details for <span id="selected-date"></span></h3>
+            <div class="todo-tabs-container" id="tedolist-tabs"></div>
+            <div class="todo-content" id="checklist-content"></div>
+        </div>
+    </div>
+    </div>
+
+
+    <footer>
+        <p>
+            <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+            <span class="dev">Developer</span>
+            <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+            <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+        </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <script>
+        // 모바일 네비바
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.getElementById('nav-toggle');
+            const mainNav = document.getElementById('main-navigation');
+            const mainHeader = document.getElementById('main-header');
+
+            navToggle.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                mainHeader.classList.toggle('active-header');
+            });
+        });
+        // 모바일 가로모드 방지
+        document.addEventListener('DOMContentLoaded', () => {
+            let selectedColor = ''; // 사용자가 선택한 색상 ID를 저장하는 변수
+            const colorMapping = {
+                'green': '#D1E4BE',
+                'yellow': '#F3E5BB',
+                'blue': '#D9E6F5'
+            };
+
+            function updateStyles(selectedColorId) {
+                selectedColor = colorMapping[selectedColorId]; // 선택된 색상을 설정
+
+                // editContainerColor 배경색 변경
+                document.querySelector('.editContainerColor').style.backgroundColor = selectedColor;
+
+                // comment-list 스크롤바 색상 변경
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    #comment-list::-webkit-scrollbar-thumb {
+                        background-color: ${selectedColor};
+                    }
+                `;
+                document.head.appendChild(style);
+
+                // add-comment-button 색상 변경
+                const addButton = document.getElementById('add-comment-button');
+                addButton.style.backgroundColor = selectedColor;
+
+                // add-comment-button hover 색상 변경
+                addButton.addEventListener('mouseenter', () => {
+                    addButton.style.backgroundColor = lightenColor(selectedColor, 20);
+                });
+                addButton.addEventListener('mouseleave', () => {
+                    addButton.style.backgroundColor = selectedColor;
+                });
+
+                // delete-comment-button 색상 변경
+                const deleteButtons = document.querySelectorAll('.delete-comment-button');
+                deleteButtons.forEach(button => {
+                    button.style.color = selectedColor;
+                    button.addEventListener('mouseenter', () => {
+                        button.style.fontWeight = 'bold';
+                    });
+                    button.addEventListener('mouseleave', () => {
+                        button.style.fontWeight = 'normal';
+                    });
+                });
+            }
+
+            // 사용자가 색상을 선택했을 때 updateStyles 함수 호출
+            const colorElements = document.querySelectorAll('.mandalart-color');
+            colorElements.forEach(element => {
+                element.addEventListener('click', function() {
+                    const selectedColorId = element.id;
+                    updateStyles(selectedColorId);
+                });
+            });
+
+            function lightenColor(color, percent) {
+                const num = parseInt(color.replace("#",""), 16),
+                    amt = Math.round(2.55 * percent),
+                    R = (num >> 16) + amt,
+                    G = (num >> 8 & 0x00FF) + amt,
+                    B = (num & 0x0000FF) + amt;
+                return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1).toUpperCase();
+            }
+
+            // 페이지 로드 시 초기 색상 설정
+            const initialColor = "<%= mandalart.center_color %>";
+            if (initialColor) {
+                updateStyles(initialColor);
+            }
+        });
+
+
+        // 모바일 네비바
+        document.addEventListener('DOMContentLoaded', () => {
+            let selectedColor = ''; // 사용자가 선택한 색상 ID를 저장하는 변수
+            const colorMapping = {
+                'green': '#D1E4BE',
+                'yellow': '#F3E5BB',
+                'blue': '#D9E6F5'
+            };
+
+            function updateStyles(selectedColorId) {
+                selectedColor = colorMapping[selectedColorId]; // 선택된 색상을 설정
+
+                // editContainerColor 배경색 변경
+                document.querySelector('.editContainerColor').style.backgroundColor = selectedColor;
+
+                // comment-list 스크롤바 색상 변경
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    #comment-list::-webkit-scrollbar-thumb {
+                        background-color: ${selectedColor};
+                    }
+                `;
+                document.head.appendChild(style);
+
+                // add-comment-button 색상 변경
+                const addButton = document.getElementById('add-comment-button');
+                addButton.style.backgroundColor = selectedColor;
+
+                // add-comment-button hover 색상 변경
+                addButton.addEventListener('mouseenter', () => {
+                    addButton.style.backgroundColor = lightenColor(selectedColor, 20);
+                });
+                addButton.addEventListener('mouseleave', () => {
+                    addButton.style.backgroundColor = selectedColor;
+                });
+
+                // delete-comment-button 색상 변경
+                const deleteButtons = document.querySelectorAll('.delete-comment-button');
+                deleteButtons.forEach(button => {
+                    button.style.color = selectedColor;
+                    button.addEventListener('mouseenter', () => {
+                        button.style.fontWeight = 'bold';
+                    });
+                    button.addEventListener('mouseleave', () => {
+                        button.style.fontWeight = 'normal';
+                    });
+                });
+            }
+
+            // 사용자가 색상을 선택했을 때 updateStyles 함수 호출
+            const colorElements = document.querySelectorAll('.mandalart-color');
+            colorElements.forEach(element => {
+                element.addEventListener('click', function() {
+                    const selectedColorId = element.id;
+                    updateStyles(selectedColorId);
+                });
+            });
+
+            function lightenColor(color, percent) {
+                const num = parseInt(color.replace("#",""), 16),
+                    amt = Math.round(2.55 * percent),
+                    R = (num >> 16) + amt,
+                    G = (num >> 8 & 0x00FF) + amt,
+                    B = (num & 0x0000FF) + amt;
+                return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1).toUpperCase();
+            }
+
+            // 페이지 로드 시 초기 색상 설정
+            const initialColor = "<%= mandalart.center_color %>";
+            if (initialColor) {
+                updateStyles(initialColor);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.mandalart');
+            const centerGoal = '<%= mandalart.centerGoal %>';
+            const tedolistCount = <%= mandalart.tedolist_count %>;
+
+            if (container) {
+                if (tedolistCount > 0) {
+                    generateMandalart(container, centerGoal, tedolistCount);
+                    addCellClickHandlers('<%= mandalart.mandalart_id %>');
+                }
+            }
+        });
+
+        let tmpCenterColor = '';
+
+        function generateMandalart(container, centerGoal, numCells) {
+            const positions = getPositions(numCells);
+
+            positions.forEach((pos, index) => {
+                const cell = document.createElement('div');
+                cell.classList.add('cell', pos);
+                cell.dataset.position = pos;
+
+                const inputDetail = document.querySelectorAll('.tedolist-detail-input')[index];
+                const inputNumber = document.querySelectorAll('.tedolist-number')[index];
+
+                if (inputDetail && inputNumber) {
+                    const contentDiv = document.createElement('div');
+                    contentDiv.classList.add('cell-content');
+
+                    const textDiv = document.createElement('div');
+                    textDiv.classList.add('cell-text');
+                    textDiv.innerText = inputDetail.value;
+
+                    const imageDiv = document.createElement('div');
+                    imageDiv.classList.add('cell-image');
+
+                    const stickerDiv = document.createElement('div');
+                    stickerDiv.classList.add('sticker');
+
+                    if (tedolists[index].tedolist_sticker && tedolists[index].tedolist_sticker.length > 0) {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = tedolists[index].tedolist_sticker;
+                        imgElement.alt = 'sticker';
+                        imgElement.classList.add('sticker');
+
+                        stickerDiv.appendChild(imgElement);
+                    }
+
+                    imageDiv.appendChild(stickerDiv);
+                    contentDiv.appendChild(textDiv);
+                    contentDiv.appendChild(imageDiv);
+
+                    cell.dataset.tedolistNumber = inputNumber.value;
+                    cell.dataset.hasTedolistDetail = "true";
+
+                    cell.appendChild(contentDiv);
+                } else {
+                    cell.dataset.hasTedolistDetail = "false";
+                }
+
+                container.appendChild(cell);
+            });
+
+            const centerCell = document.createElement('div');
+            centerCell.classList.add('cell', 'center');
+            centerCell.dataset.position = 'center';
+            centerCell.innerText = centerGoal;
+
+            const centerColor = "<%= mandalart.center_color %>";
+            console.log("Center Color:", centerColor);  // 디버깅용 로그
+
+            if (centerColor === 'yellow') {
+                centerCell.style.backgroundColor = '#F3E5BB';
+                tmpCenterColor = 'yellow';
+            } else if (centerColor === 'blue') {
+                centerCell.style.backgroundColor = '#D9E6F5';
+                tmpCenterColor = 'blue';
+            } else {
+                centerCell.style.backgroundColor = '#D1E4BE';
+                tmpCenterColor = 'green';
+            }
+
+            container.appendChild(centerCell);
+            console.log("tmpCenterColor:", tmpCenterColor);  // 디버깅용 로그
+        }
+
+        function addCellClickHandlers(mandalartId) {
+            const cells = document.querySelectorAll('.mandalart .cell');
+
+            let activeColor;
+            if (tmpCenterColor === 'yellow') {
+                activeColor = '#FFF8E3';
+            } else if (tmpCenterColor === 'blue') {
+                activeColor = '#EAF4FF';
+            } else {
+                activeColor = '#F4FFE8';
+            }
+            console.log("Active Color:", activeColor);  // 디버깅용 로그
+
+            cells.forEach(cell => {
+                if (!cell.classList.contains('center')) {
+                    cell.addEventListener('click', async (event) => {
+                        // centerCell의 색상을 유지한 상태에서 나머지 셀의 배경색 초기화
+                        cells.forEach(c => {
+                            if (!c.classList.contains('center')) {
+                                c.classList.remove('active');
+                                c.style.backgroundColor = ''; // 배경색 초기화
+                            }
+                        });
+
+                        // 현재 선택된 셀에 active 클래스 추가 및 색상 적용
+                        cell.classList.add('active');
+                        if (activeColor) {
+                            cell.style.backgroundColor = activeColor;
+                        }
+                        console.log("Clicked Cell Background Color:", cell.style.backgroundColor);  // 디버깅용 로그
+
+                        const tedolistNumber = event.target.dataset.tedolistNumber;
+                        if (tedolistNumber) {
+                            await loadChecklists(mandalartId, tedolistNumber);
+                        } else {
+                            document.querySelector('#checklist-container').style.display = 'none';
+                        }
+                    });
+                }
+            });
+        }
+
+        async function loadChecklists(mandalartId, tedolistNumber) {
+            const response = await fetch(`/mandalart/checklists/${mandalartId}/${tedolistNumber}`);
+            if (response.ok) {
+                const checklists = await response.json();
+                const checklistContainer = document.querySelector('#checklist-list');
+                checklistContainer.innerHTML = '';
+                checklists.forEach(checklist => {
+                    const li = document.createElement('li');
+                    li.classList.add('checklist-item');
+                    li.innerHTML = `
+                        <input type="checkbox" class="checklist-checkbox" data-checklist-id="${checklist.checklist_id}" ${checklist.is_checked ? 'checked' : ''}>
+                        <span>${checklist.checklist_detail}</span>
+                    `;
+                    checklistContainer.appendChild(li);
+                });
+
+                document.querySelectorAll('.checklist-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', async (event) => {
+                        const checklistId = event.target.dataset.checklistId;
+                        const isChecked = event.target.checked;
+                        await updateChecklistStatus(checklistId, isChecked);
+                    });
+                });
+
+                document.querySelector('#checklist-container').style.display = 'block';
+            }
+        }
+
+        async function updateChecklistStatus(checklistId, isChecked) {
+            const response = await fetch(`/mandalart/updateChecklistStatus/${checklistId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ is_checked: isChecked })
+            });
+            if (!response.ok) {
+                console.error('Failed to update checklist status');
+            }
+        }
+
+        async function incrementReaction(commentId, emoji) {
+            const response = await fetch('/comment/reaction/increment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ comment_id: commentId, emoji })
+            });
+            if (!response.ok) {
+                console.log('Failed to increment reaction');
+            }
+        }
+
+        function generateReactionsHTML(comment) {
+            const emojis = ['1', '2', '3', '4', '5'];
+            return emojis.map(emoji => `
+                <div class="comment-reaction" data-emoji="${emoji}">
+                    <img src="/images/${emoji}.svg" alt="${emoji}">
+                    <span>${comment[`imogi${emoji}count`] || 0}</span>
+                </div>
+            `).join('');
+        }
+        
+        $(document).ready(function () {
+            const mandalartId = '<%= mandalart.mandalart_id %>';
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const container = document.querySelector('.mandalart');
+                const centerGoal = '<%= mandalart.centerGoal %>';
+                const tedolistCount = <%= mandalart.tedolist_count %>;
+
+                if (container) {
+                    if (tedolistCount > 0) {
+                        generateMandalart(container, centerGoal, tedolistCount);
+                        addCellClickHandlers(mandalartId);
+                    }
+                }
+
+                loadComments(mandalartId);
+
+                document.getElementById('add-comment-button').addEventListener('click', () => {
+                    const commentDetail = document.getElementById('new-comment').value.trim();
+                    if (commentDetail) {
+                        addComment(mandalartId, commentDetail);
+                    }
+                });
+            });
+
+            function generateMandalart(container, centerGoal, tedolistCount) {
+                const mandalartGrid = document.createElement('div');
+                mandalartGrid.classList.add('mandalart-grid');
+                mandalartGrid.classList.add(`grid-${tedolistCount}`);
+                mandalartGrid.style.display = 'grid';
+                mandalartGrid.style.gridTemplateColumns = `repeat(${tedolistCount}, 1fr)`;
+                mandalartGrid.style.gridTemplateRows = `repeat(${tedolistCount}, 1fr)`;
+                mandalartGrid.style.gap = '5px';
+
+                for (let row = 0; row < tedolistCount; row++) {
+                    for (let col = 0; col < tedolistCount; col++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('mandalart-cell');
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+
+                        if (row === Math.floor(tedolistCount / 2) && col === Math.floor(tedolistCount / 2)) {
+                            cell.textContent = centerGoal;
+                            cell.classList.add('center-cell');
+                        }
+
+                        mandalartGrid.appendChild(cell);
+                    }
+                }
+
+                container.appendChild(mandalartGrid);
+            }
+
+            function addCellClickHandlers(mandalartId) {
+                const cells = document.querySelectorAll('.mandalart-cell');
+                cells.forEach(cell => {
+                    cell.addEventListener('click', async (event) => {
+                        const row = event.currentTarget.dataset.row;
+                        const col = event.currentTarget.dataset.col;
+
+                        try {
+                            const response = await fetch(`/mandalart/${mandalartId}/goal/${row}/${col}`);
+                            if (response.ok) {
+                                const data = await response.json();
+                                if (data && data.goal) {
+                                    alert(`Goal: ${data.goal}`);
+                                } else {
+                                    alert('No goal data available for this cell');
+                                }
+                            } else {
+                                alert('Failed to fetch goal data');
+                            }
+                        } catch (error) {
+                            console.error('Error fetching goal data:', error);
+                            alert('Error fetching goal data');
+                        }
+                    });
+                });
+            }
+
+            async function loadComments(mandalartId) {
+                try {
+                    const response = await fetch(`/mandalart/${mandalartId}/comments`);
+                    if (response.ok) {
+                        const comments = await response.json();
+                        displayComments(comments);
+                    } else {
+                        console.error('Failed to load comments');
+                    }
+                } catch (error) {
+                    console.error('Error loading comments:', error);
+                }
+            }
+
+            function displayComments(comments) {
+                const commentList = document.getElementById('comment-list');
+                const commentCount = document.getElementById('comment-count');
+                commentList.innerHTML = '';
+                commentCount.textContent = comments.length;
+
+                comments.forEach(comment => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('comment-item');
+
+                    const detailDiv = document.createElement('div');
+                    detailDiv.classList.add('comment-detail');
+                    detailDiv.textContent = comment.comment_detail;
+
+                    const timestampDiv = document.createElement('div');
+                    timestampDiv.classList.add('comment-timestamp');
+                    timestampDiv.textContent = `작성 시간: ${comment.comment_timestamp}`;
+
+                    listItem.appendChild(detailDiv);
+                    listItem.appendChild(timestampDiv);
+                    commentList.appendChild(listItem);
+                });
+            }
+
+            async function addComment(mandalartId, commentDetail) {
+                try {
+                    const response = await fetch(`/mandalart/${mandalartId}/comments`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ comment_detail: commentDetail })
+                    });
+
+                    if (response.ok) {
+                        const newComment = await response.json();
+                        document.getElementById('new-comment').value = '';
+                        loadComments(mandalartId);
+                    } else {
+                        console.error('Failed to add comment');
+                    }
+                } catch (error) {
+                    console.error('Error adding comment:', error);
+                }
+            }
+        });
+
+        function getPositions(numCells) {
+            switch (numCells) {
+                case 2:
+                    return ["left", "right"];
+                case 3:
+                    return ["left", "right", "down"];
+                case 4:
+                    return ["up", "left", "right", "down"];
+                case 5:
+                    return ["up", "left", "right", "down-left", "down-right"];
+                case 6:
+                    return ["up", "up-left", "up-right", "down", "down-left", "down-right"];
+                case 7:
+                    return ["up-left", "up-right", "left", "right", "down-left", "down", "down-right"];
+                case 8:
+                    return ["up-left", "up", "up-right", "left", "right", "down-left", "down", "down-right"];
+                default:
+                    return [];
+            }
+        }
+
+        async function loadChecklists(mandalartId, tedolistNumber) {
+            const response = await fetch(`/mandalart/checklists/${mandalartId}/${tedolistNumber}`);
+            if (response.ok) {
+                const checklists = await response.json();
+                const checklistContainer = document.querySelector('#checklist-list');
+                checklistContainer.innerHTML = '';
+                checklists.forEach(checklist => {
+                    const li = document.createElement('li');
+                    li.classList.add('checklist-item');
+                    li.innerHTML = `
+                        <input type="checkbox" class="checklist-checkbox" data-checklist-id="${checklist.checklist_id}" ${checklist.is_checked ? 'checked' : ''}>
+                        <span>${checklist.checklist_detail}</span>
+                    `;
+                    checklistContainer.appendChild(li);
+                });
+
+                document.querySelectorAll('.checklist-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', async (event) => {
+                        const checklistId = event.target.dataset.checklistId;
+                        const isChecked = event.target.checked;
+                        await updateChecklistStatus(checklistId, isChecked);
+                    });
+                });
+
+                document.querySelector('#checklist-container').style.display = 'block';
+            }
+        }
+
+        async function updateChecklistStatus(checklistId, isChecked) {
+            const response = await fetch(`/mandalart/updateChecklistStatus/${checklistId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ is_checked: isChecked })
+            });
+            if (!response.ok) {
+                console.error('Failed to update checklist status');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const mandalartId = '<%= mandalart.mandalart_id %>';
+
+            // Load comments on page load
+            loadComments(mandalartId);
+
+            // Add comment button click event
+            document.getElementById('add-comment-button').addEventListener('click', () => {
+                const commentDetail = document.getElementById('new-comment').value.trim();
+                if (commentDetail) {
+                    addComment(mandalartId, commentDetail);
+                }
+            });
+
+            // Submit comment on Enter key press
+            document.getElementById('new-comment').addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const commentDetail = event.target.value.trim();
+                    if (commentDetail) {
+                        addComment(mandalartId, commentDetail);
+                    }
+                }
+            });
+        });
+
+        async function loadComments(mandalartId) {
+            const response = await fetch(`/comment/${mandalartId}`);
+            if (response.ok) {
+                const comments = await response.json();
+                const commentList = document.getElementById('comment-list');
+                const commentCountSpan = document.getElementById('comment-count');
+
+                commentList.innerHTML = '';
+                comments.forEach(comment => {
+                    const li = document.createElement('li');
+                    li.className = 'comment-item';
+
+                    // 댓글 작성자의 프로필 이미지 URL 설정
+                    const userImage = comment.user_image ? `/uploads/${comment.user_image}` : '/images/default-profile.png';
+
+                    li.innerHTML = `
+                        <div class="comment-header">
+                            <div class="comment-author">
+                                <img src="${userImage}" alt="profile" class="profile-image">
+                                <span class="comment-author-name">${comment.user_nickname}</span>
+                            </div>
+                            <span class="comment-date">${comment.date}</span>
+                        </div>
+                        <div class="comment-detail">${comment.comment_detail}</div>
+                        <div class="comment-reactions">
+                            ${generateReactionsHTML(comment)}
+                        </div>
+                        <button class="delete-comment-button" data-comment-id="${comment.comment_id}">삭제</button>
+                    `;
+                    li.querySelectorAll('.comment-reaction').forEach(reaction => {
+                        reaction.addEventListener('click', async () => {
+                            const emoji = reaction.dataset.emoji;
+                            await incrementReaction(comment.comment_id, emoji);
+                            const countSpan = reaction.querySelector('span');
+                            countSpan.textContent = parseInt(countSpan.textContent) + 1;
+                        });
+                    });
+                    li.querySelector('.delete-comment-button').addEventListener('click', async () => {
+                        await deleteComment(comment.comment_id);
+                        loadComments(mandalartId);
+                    });
+                    commentList.appendChild(li);
+                });
+                // Update the comment count
+                commentCountSpan.textContent = comments.length;
+            }
+        }
+
+        async function addComment(mandalartId, commentDetail) {
+            const response = await fetch('/comment/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ mandalart_id: mandalartId, comment_detail: commentDetail })
+            });
+            if (response.ok) {
+                document.getElementById('new-comment').value = '';
+                loadComments(mandalartId);
+            }
+        }
+
+        async function deleteComment(commentId) {
+            const response = await fetch(`/comment/delete/${commentId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                loadComments('<%= mandalart.mandalart_id %>');
+            }
+        }
+
+        async function incrementReaction(commentId, emoji) {
+            const response = await fetch('/comment/reaction/increment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ comment_id: commentId, emoji })
+            });
+            if (!response.ok) {
+                console.log('Failed to increment reaction');
+            }
+        }
+
+        function generateReactionsHTML(comment) {
+            const emojis = ['1', '2', '3', '4', '5'];
+            return emojis.map(emoji => `
+                <div class="comment-reaction" data-emoji="${emoji}">
+                    <img src="/images/${emoji}.svg" alt="${emoji}">
+                    <span>${comment[`imogi${emoji}count`] || 0}</span>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

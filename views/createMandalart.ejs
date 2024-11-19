@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/createMandalart.css">
+</head>
+
+<body>
+  <div id="wrap">
+  <header id="main-header">
+    <a href="/">
+        <img src="/images/logo.svg" alt="logo" class="logo">
+    </a>
+    <button id="nav-toggle" class="nav-toggle">
+      <span class="nav-icon"></span>
+      <span class="nav-icon"></span>
+      <span class="nav-icon"></span>
+    </button>
+    <nav id="main-navigation">
+        <ul class="menu">
+            <li class="menu-item"><button onclick="window.location.href='/mandalart'" class="nav-button active">My Mandalart</button></li>
+            <li class="menu-item"><button onclick="window.location.href='/share'" class="nav-button">Share</button></li>
+            <li class="menu-item"><button onclick="window.location.href='/calendar'" class="nav-button">Calendar</button></li>
+            <li class="menu-item"><button onclick="window.location.href='/profile'" class="nav-button">Profile</button></li>
+        </ul>
+    </nav>
+  </header>
+
+
+  <main class="flex-fill">
+    <div id="container">
+      <div class="form-container">
+        <h2>CREATE</h2>
+        <form id = "mandalart-form" action="/mandalart/create" method="POST">
+          <input type="hidden" name="userId" value="<%= user.user_id %>">
+          <label for="centergoal">목표</label>
+          <input type="text" name="centergoal" id="centergoal" placeholder="목표를 입력하세요." required>
+          <label for="tedolistCount">칸 개수</label>
+          <input type="number" name="tedolistCount" id="tedolistCount" min="2" max="8" placeholder="테두리스트 개수를 입력하세요. * 2~8개 입력" required>
+          <button type="submit" class="create-button">생성하기</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+  </div>
+  <footer>
+    <p>
+        <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+        <span class="dev">Developer</span>
+        <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+        <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+    </p>
+</footer>
+  
+  <script>
+    // 모바일 네비바
+    document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.getElementById('nav-toggle');
+            const mainNav = document.getElementById('main-navigation');
+            const mainHeader = document.getElementById('main-header');
+
+            navToggle.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                mainHeader.classList.toggle('active-header');
+            });
+        });
+</script>
+  
+</body>
+</html>

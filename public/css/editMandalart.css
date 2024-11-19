@@ -1,0 +1,879 @@
+/* 만다라트 관련 */
+body {
+    background-color: #EEEEEE;
+}
+header {
+    background-color: #EEEEEE;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    margin-top: -80px;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.color-container {
+    display: flex;
+    width: 400px;
+}
+
+.mandalart-color {
+    width: 33.3%;
+    height: 40px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+#green {
+    background-color: #D1E4BE !important;
+    margin-right: 10px;
+}
+
+#yellow {
+    background-color: #F3E5BB !important;
+    margin-right: 10px;
+}
+
+#blue {
+    background-color: #D9E6F5 !important;
+}
+
+.cell.center {
+    background-color: #D1E4BE;
+}
+
+.sticker-container {
+    margin-top: 10px;
+    display: flex;
+    width: 400px;
+    justify-content: center;
+}
+
+#sticker1 {
+    margin-left: 5px;
+}
+
+.sticker {
+    object-fit: contain;
+    margin-right: 5px;
+}
+
+.sticker img {
+    width: 100%;
+    height: 100%;
+}
+
+#tedolist-form {
+    display: grid;
+    justify-content: center;
+    text-align: center;
+}
+
+.mandalart {
+    position: relative;
+    width: 648px;
+    height: 648px;
+    background: white;
+}
+
+h3 {
+    text-align: center;
+}
+
+.cell {
+    position: absolute;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+}
+
+.cell.active {
+    background-color: #F4FFE8;
+}
+
+.center {
+    background: #D1E4BE;
+}
+
+.cell-content {
+    pointer-events: none; 
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cell-text {
+    font-size: 14px;
+    padding: 5px;
+}
+
+.cell-image {
+    width: 50px;
+    object-fit: contain;
+}
+
+.tedolist-detail-input {
+    border: none; 
+    background: transparent;
+    display: none;
+}
+input:focus {
+    outline:none;
+}
+
+.cell-text {
+    font-size: 14px;
+    padding: 5px;
+}
+.delete-checklist {
+    cursor: pointer;
+    color: red;
+}
+
+/* 체크리스트 */
+#checklistDetail {
+    border: none;
+    border-bottom: 1px solid #000;
+    outline: none; 
+    width: 100%; 
+    padding: 5px;
+    box-sizing: border-box; 
+}
+
+#checklistDetail:focus {
+    border-bottom: 1px solid #007BFF;
+}
+
+#checklist-container {
+    background: #fff;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px;
+    height: 500px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+#checklist-container::-webkit-scrollbar {
+    width: 10px;
+    background-color: black;
+}
+
+#checklist-form {
+    display: grid;
+    justify-content: center;
+    text-align: center;
+}
+
+#checklist-list {
+    margin-top: 10px;
+    list-style-type: none;
+    padding: 0;
+}
+.checklist-item {
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+
+    display: block;
+    margin-bottom: 10px; /* Space between checklist items */
+    word-wrap: break-word; /* Ensure long text wraps within the item */
+    white-space: normal; /* Allow text to wrap */
+}
+
+/* 각종 버튼 관련 */
+.btn{
+    color: black;
+}
+
+#doneBtn {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#doneBtn button {
+    border-radius: 50px;
+    border: none;
+    background-color: #D9D9D9;
+    margin-top: 5px;
+    width: 60px;
+}
+
+#delete-mandalart-form button {
+    border-radius: 50px;
+    border: none;
+    background-color: #D9D9D9;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+
+#checklist-container button {
+    border-radius: 50px;
+    border: none;
+    background-color: #D9D9D9;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center; 
+    margin-top: 20px;
+    position: absolute;
+
+    width: 100%;
+    left: 0;
+}
+
+.button-container button {
+    margin-left: 10px;
+    border-radius: 50px;
+    border: none;
+    background-color: #D9D9D9;
+    height: 30px;
+}
+
+
+#checklist-container button,
+#checklist-form button {
+    display: block;
+    margin: 10px auto; /* 중앙 정렬을 위해 자동 여백 */
+}
+
+
+/* 만다라트 셀 관련 */
+.grid-2 .cell.left {
+    width: 324px;
+    height: 648px;
+    left: 0;
+    top: 0;
+}
+.grid-2 .cell.right {
+    width: 324px;
+    height: 648px;
+    left: 324px;
+    top: 0;
+}
+.grid-2 .cell.center {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 215px;
+}
+
+.grid-3 .cell.left {
+    width: 324px;
+    height: 648px;
+    left: 0;
+    top: 0;
+}
+.grid-3 .cell.right {
+    width: 324px;
+    height: 648px;
+    left: 324px;
+    top: 0;
+}
+.grid-3 .cell.down {
+    width: 648px;
+    height: 217px;
+    left: 0;
+    top: 431px;
+}
+.grid-3 .cell.center {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 215px;
+}
+
+.grid-4 .cell.up {
+    width: 430px;
+    height: 215px;
+    left: 215px;
+    top: 0;
+}
+.grid-4 .cell.left {
+    width: 215px;
+    height: 430px;
+    left: 0;
+    top: 0;
+}
+.grid-4 .cell.right {
+    width: 215px;
+    height: 430px;
+    left: 430px;
+    top: 215px;
+}
+.grid-4 .cell.down {
+    width: 430px;
+    height: 215px;
+    left: 0;
+    top: 430px;
+}
+.grid-4 .cell.center {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 215px;
+}
+
+.grid-5 .cell.up {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 0;
+}
+.grid-5 .cell.left {
+    width: 215px;
+    height: 430px;
+    left: 0px;
+    top: 0px;
+}
+.grid-5 .cell.right {
+    width: 215px;
+    height: 430px;
+    left: 430px;
+    top: 0px;
+}
+.grid-5 .cell.down-left {
+    width: 322.5px;
+    height: 215px;
+    left: 0px;
+    top: 430px;
+}
+.grid-5 .cell.down-right {
+    width: 322.5px;
+    height: 215px;
+    left: 322.5px;
+    top: 430px;
+}
+.grid-5 .cell.center {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 215px;
+}
+
+.grid-6 .cell.up {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 0;
+}
+.grid-6 .cell.up-left {
+    width: 215px;
+    height: 322.5px;
+    left: 0;
+    top: 0;
+}
+.grid-6 .cell.up-right {
+    width: 215px;
+    height: 322.5px;
+    left: 430px;
+    top: 0;
+}
+.grid-6 .cell.down {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 430px;
+}
+.grid-6 .cell.down-right {
+    width: 215px;
+    height: 322.5px;
+    left: 430px;
+    top: 322.5px;
+}
+.grid-6 .cell.down-left {
+    width: 215px;
+    height: 322.5px;
+    left: 0px;
+    top: 322.5px;
+}
+.grid-6 .cell.center {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 215px;
+}
+
+.grid-7 .cell.up-left {
+    width: 322.5px;
+    height: 215px;
+    left: 0px;
+    top: 0px;
+}
+.grid-7 .cell.up-right {
+    width: 322.5px;
+    height: 215px;
+    left: 322.5px;
+    top: 0px;
+}
+.grid-7 .cell.left {
+    width: 215px;
+    height: 215px;
+    left: 0px;
+    top: 215px;
+}
+.grid-7 .cell.right {
+    width: 215px;
+    height: 215px;
+    left: 430px;
+    top: 215px;
+}
+.grid-7 .cell.down {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 430px;
+}
+.grid-7 .cell.down-left {
+    width: 215px;
+    height: 215px;
+    left: 0px;
+    top: 430px;
+}
+.grid-7 .cell.down-right {
+    width: 215px;
+    height: 215px;
+    left: 430px;
+    top: 430px;
+}
+.grid-7 .cell.center {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 215px;
+}
+
+.grid-8 .cell.up {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 0;
+}
+.grid-8 .cell.left {
+    width: 215px;
+    height: 215px;
+    left: 0;
+    top: 215px;
+}
+.grid-8 .cell.right {
+    width: 215px;
+    height: 215px;
+    left: 430px;
+    top: 215px;
+}
+.grid-8 .cell.down {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 430px;
+}
+.grid-8 .cell.down-right {
+    width: 215px;
+    height: 215px;
+    left: 430px;
+    top: 430px;
+}
+.grid-8 .cell.down-left {
+    width: 215px;
+    height: 215px;
+    left: 0px;
+    top: 430px;
+}
+.grid-8 .cell.up-left {
+    width: 215px;
+    height: 215px;
+    left: 0px;
+    top: 0px;
+}
+.grid-8 .cell.up-right {
+    width: 215px;
+    height: 215px;
+    left: 430px;
+    top: 0px;
+}
+
+.grid-8 .cell.center {
+    width: 215px;
+    height: 215px;
+    left: 215px;
+    top: 215px;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    /* 헤더 아래 */
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0 auto;
+        gap: 5px;
+        height: auto;
+        width: 90%;
+        margin-top: 0px;
+        margin-bottom: 50px;
+
+    }
+    .mandalart {
+        width: 330px;
+        height: 330px;
+        margin: 0 auto;
+    }
+
+    .cell {
+        font-size: 12px;
+    }
+
+    #checklist-container {
+        width: 70%;
+        margin: 0 auto 20px;
+        height: auto;
+        padding: 10px;
+        
+    }
+
+    #checklist-form {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .button-container{
+        bottom: 30px;
+    }
+    
+    .color-container,.sticker-container {
+        width: 100%;
+    }
+    /* 각 칸 개수에 따른 레이아웃 정의 */
+    .grid-2 .cell.left {
+        width: 165px;
+        height: 330px;
+        left: 0;
+        top: 0;
+    }
+    .grid-2 .cell.right {
+        width: 165px;
+        height: 330px;
+        left: 165px;
+        top: 0;
+    }
+    .grid-2 .cell.center {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 110px;
+    }
+
+    .grid-3 .cell.left {
+        width: 165px;
+        height: 330px;
+        left: 0;
+        top: 0;
+    }
+    .grid-3 .cell.right {
+        width: 165px;
+        height: 330px;
+        left: 165px;
+        top: 0;
+    }
+    .grid-3 .cell.down {
+        width: 330px;
+        height: 110px;
+        left: 0;
+        top: 220px;
+    }
+    .grid-3 .cell.center {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 110px;
+    }
+
+    .grid-4 .cell.up {
+        width: 220px;
+        height: 110px;
+        left: 110px;
+        top: 0;
+    }
+    .grid-4 .cell.left {
+        width: 110px;
+        height: 220px;
+        left: 0;
+        top: 0;
+    }
+    .grid-4 .cell.right {
+        width: 110px;
+        height: 220px;
+        left: 220px;
+        top: 110px;
+    }
+    .grid-4 .cell.down {
+        width: 220px;
+        height: 110px;
+        left: 0;
+        top: 220px;
+    }
+    .grid-4 .cell.center {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 110px;
+    }
+
+    .grid-5 .cell.up {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 0;
+    }
+    .grid-5 .cell.left {
+        width: 109px;
+        height: 220px;
+        left: 0px;
+        top: 0px;
+    }
+    .grid-5 .cell.right {
+        width: 109px;
+        height: 220px;
+        left: 220px;
+        top: 0px;
+    }
+    .grid-5 .cell.down-left {
+        width: 165px;
+        height: 110px;
+        left: 0px;
+        top: 220.5px;
+    }
+    .grid-5 .cell.down-right {
+        width: 164px;
+        height: 110px;
+        left: 165px;
+        top: 220.5px;
+    }
+    .grid-5 .cell.center {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 110px;
+    }
+
+    .grid-6 .cell.up {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 0;
+    }
+    .grid-6 .cell.up-left {
+        width: 109px;
+        height: 165px;
+        left: 0;
+        top: 0;
+    }
+    .grid-6 .cell.up-right {
+        width: 109px;
+        height: 165px;
+        left: 220px;
+        top: 0;
+    }
+    .grid-6 .cell.down {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 220px;
+    }
+    .grid-6 .cell.down-right {
+        width: 109px;
+        height: 165px;
+        left: 220px;
+        top: 165px;
+    }
+    .grid-6 .cell.down-left {
+        width: 109px;
+        height: 165px;
+        left: 0px;
+        top: 165px;
+    }
+    .grid-6 .cell.center {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 110px;
+    }
+
+    .grid-7 .cell.up-left {
+        width: 165px;
+        height: 110px;
+        left: 0px;
+        top: 0px;
+    }
+    .grid-7 .cell.up-right {
+        width: 165px;
+        height: 110px;
+        left: 165px;
+        top: 0px;
+    }
+    .grid-7 .cell.left {
+        width: 110px;
+        height: 110px;
+        left: 0px;
+        top: 110px;
+    }
+    .grid-7 .cell.right {
+        width: 110px;
+        height: 110px;
+        left: 220px;
+        top: 110px;
+    }
+    .grid-7 .cell.down {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 220.5px;
+    }
+    .grid-7 .cell.down-left {
+        width: 110px;
+        height: 110px;
+        left: 0px;
+        top: 220.5px;
+    }
+    .grid-7 .cell.down-right {
+        width: 110px;
+        height: 110px;
+        left: 220px;
+        top: 220.5px;
+    }
+    .grid-7 .cell.center {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 110px;
+    }
+
+    .grid-8 .cell.up {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 1px;
+    }
+    .grid-8 .cell.left {
+        width: 110px;
+        height: 110px;
+        left: 0px;
+        top: 110px;
+    }
+    .grid-8 .cell.right {
+        width: 110px;
+        height: 110px;
+        left: 220px;
+        top: 110px;
+    }
+    .grid-8 .cell.down {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 220px;
+    }
+    .grid-8 .cell.down-right {
+        width: 110px;
+        height: 109px;
+        left: 220px;
+        top: 221px;
+    }
+    .grid-8 .cell.down-left {
+        width: 110px;
+        height: 110px;
+        left: 0px;
+        top: 220px;
+    }
+    .grid-8 .cell.up-left {
+        width: 110px;
+        height: 110px;
+        left: 0px;
+        top: 1px;
+    }
+    .grid-8 .cell.up-right {
+        width: 110px;
+        height: 110px;
+        left: 220px;
+        top: 1px;
+    }
+    .grid-8 .cell.center {
+        width: 110px;
+        height: 110px;
+        left: 110px;
+        top: 110px;
+    }
+
+
+}
+
+@media (max-width: 390px) {
+    /* 헤더 아래 */
+    .container {
+        margin: 0 auto;
+        height: auto;
+        margin-top: 0px;
+        margin-bottom: 50px;
+    }
+    /* 체크리스트 */
+    .editContainer { 
+        width: 95%;
+    }
+
+    .button-container{
+        bottom: 30px;
+    }
+}
+
+@media (max-width: 380px) {
+    /* 헤더 아래 */
+    .container {
+        margin: 0 20px;
+        height: auto;
+        margin-top: 0px;
+        margin-bottom: 30px;
+    }
+    .button-container{
+        bottom: 10px;
+    }
+    
+}
+
+
+@media (max-width: 350px) {
+    /* 헤더 아래 */
+    .container {
+        margin-top: -50px;
+        margin-left: 17px;
+        height: auto;
+        margin-bottom: 30px;
+    }
+    /* 만다라트*/
+    .mandalart {
+        width: 330px;
+        height: 330px;
+        max-width: 330px;
+        margin: 0 auto;
+    }
+
+    /* 체크리스트 */
+    .editContainer { 
+        width: 100%;
+        margin-left: 8px;
+    }
+}

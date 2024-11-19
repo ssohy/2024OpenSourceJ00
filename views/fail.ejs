@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/payment_result.css">
+  </head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+  <body>
+    <div id="wrap">
+    <header id="main-header">
+      <a href="/">
+          <img src="/images/logo.svg" alt="logo" class="logo">
+      </a>
+      <button id="nav-toggle" class="nav-toggle">
+          <span class="nav-icon"></span>
+          <span class="nav-icon"></span>
+          <span class="nav-icon"></span>
+      </button>
+      <nav id="main-navigation">
+          <ul class="menu">
+              <li class="menu-item"><button onclick="window.location.href='/mandalart'" class="nav-button">My Mandalart</button></li>
+              <li class="menu-item"><button onclick="window.location.href='/share'" class="nav-button">Share</button></li>
+              <li class="menu-item"><button onclick="window.location.href='/calendar'" class="nav-button">Calendar</button></li>
+              <li class="menu-item"><button onclick="window.location.href='/profile'" class="nav-button">Profile</button></li>
+          </ul>
+      </nav>
+    </header>
+  
+    <div class="main">
+        <div id="lottie-animation" style="width: 471px; height: 321px;"></div>
+        <div class="title">멤버십 결제에 실패했습니다</div>
+        <!--<p id="code"></p>-->
+        <div id="message" class="subtitle"></div>
+        <div class="subtitle">다시 한 번 시도해주세요</div>
+    </div>
+    </div>
+
+    <footer>
+      <p>
+          <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+          <span class="dev">Developer</span>
+          <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+          <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+      </p>
+  </footer>
+  </body>
+</html>
+
+<script>
+    // 모바일 네비바
+    document.addEventListener('DOMContentLoaded', () => {
+        const navToggle = document.getElementById('nav-toggle');
+        const mainNav = document.getElementById('main-navigation');
+        const mainHeader = document.getElementById('main-header');
+          
+        navToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            mainHeader.classList.toggle('active-header');
+         });
+    });
+  
+    var animation = lottie.loadAnimation({
+      container: document.getElementById('lottie-animation'),
+      renderer: 'svg',
+      loop: true, 
+      autoplay: true, 
+      path: '/images/fail.json' 
+      });
+      const urlParams = new URLSearchParams(window.location.search);
+
+    const codeElement = document.getElementById("code");
+    const messageElement = document.getElementById("message");
+
+    //codeElement.textContent = "에러코드: " + urlParams.get("code");
+    messageElement.textContent = "실패 사유: " + urlParams.get("message");
+</script>

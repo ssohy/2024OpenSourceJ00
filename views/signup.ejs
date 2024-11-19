@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="/css/signup.css">
+</head>
+<body>
+    <img src="/images/logo.svg" alt="Logo" class="logo">
+    <div class="signup-container">
+        <div class="signup-box">
+            <h2>Sign Up</h2>
+            <form id="signupForm" action="/api/users/signup" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <input type="text" name="user_id" placeholder="ID" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="user_pw" placeholder="Password" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="user_email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="birthday" name="user_birthday" placeholder="Birthday" required onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}">
+                </div>
+                <div class="input-group">
+                    <input type="text" name="user_nickname" placeholder="Nickname" required>
+                </div>
+                <div class="input-group">
+                    <input type="file" name="user_image" accept="image/*">
+                </div>
+                <button type="submit" class="btn">가입하기</button>
+            </form>
+            <p>이미 계정이 있습니까? <a href="/signin" class="signup-link">로그인 하기</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form); // FormData 객체 생성
+
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: formData, // FormData 객체 전송
+            });
+
+            if (response.ok) {
+                alert('회원가입에 성공했습니다!');
+                window.location.href = '/signin';
+            } else {
+                alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+            }
+        });
+    </script>
+
+</body>
+</html>

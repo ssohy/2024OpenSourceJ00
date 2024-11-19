@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/profile.css">
+    <style>
+        .delete-button {
+            background-color: #006735;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .profile-image-container {
+            position: relative;
+            display: inline-block;
+        }
+        .profile-image-container img.profile-image {
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+    <header id="main-header">
+        <a href="/">
+            <img src="/images/logo.svg" alt="logo" class="logo">
+        </a>
+        <button id="nav-toggle" class="nav-toggle">
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+        </button>
+        <nav id="main-navigation">
+            <ul class="menu">
+                <li class="menu-item"><button onclick="window.location.href='/mandalart'" class="nav-button">My Mandalart</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/share'" class="nav-button">Share</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/calendar'" class="nav-button">Calendar</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/profile'" class="nav-button active">Profile</button></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="profile-section">
+            <h2>프로필 <% if (user && user.membership) { %><img src="/images/label.png" alt="edit" class="membership-icon"><% } %></h2>
+            </h2>
+            <div class="profile-card">
+                <div class="profile-info">
+                    <div class="profile-image-container">
+                        <% if (user && user.user_image) { %>
+                            <img src="/uploads/<%= user.user_image %>" alt="프로필 사진" class="profile-image">
+                        <% } else { %>
+                            <img src="/images/default-profile.png" alt="기본 프로필 사진" class="profile-image">
+                        <% } %>
+                        <img src="/images/edit-icon.png" alt="edit" class="edit-icon" onclick="document.getElementById('fileInput').click();">
+                        <form id="editForm" class="edit-form" action="/api/users/updateProfileImage" method="POST" enctype="multipart/form-data">
+                            <input type="file" id="fileInput" name="user_image" accept="image/*" class="file-input" onchange="document.getElementById('editForm').submit();">
+                        </form>
+                    </div>
+                    <h3 class="user-nickname"><%= user ? user.user_nickname : 'Guest' %></h3>
+                </div>
+                <p>아이디 : <%= user ? user.user_id : 'Guest' %></p>
+                <p>이메일 : <%= user ? user.user_email : 'Not available' %></p>
+                <p>생년월일 : <%= user ? new Date(user.user_birthday).toISOString().split('T')[0] : 'Not available' %></p>
+                            
+                <% if (user) { %>
+                    <button class="delete-button" onclick="confirmDelete()">회원 탈퇴</button>
+                <% } %>
+            </div>            
+        </section>
+
+        <section class="profile-section">
+            <div class="profile-card">
+                <p>
+                    <% if (user && user.cheering > 0) { %>
+                        <%= user.cheering %>명이 <%= user.user_nickname %>님을 응원하고 있어요!
+                    <% } else { %>
+                        j00per가 <%= user ? user.user_nickname : 'Guest' %>님을 응원하고 있어요!
+                    <% } %>
+                </p>
+            </div>
+        </section>
+
+        <% if (user && !user.membership) { %> <!-- 멤버십이 없을 때만 표시 -->
+        <section class="profile-membership">
+            <div class="membership">
+                <p>단 돈 2990원에 j00 무한 멤버십 즐기기</p>
+                <a href='/membership'>멤버십을 등록하시겠습니까?</a>    
+            </div>
+        </section>
+        <% } %>
+    </main>
+    </div>
+
+    <footer>
+        <p>
+            <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+            <span class="dev">Developer</span>
+            <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+            <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+        </p>
+    </footer>
+
+    <script>
+        // 모바일 네비바
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.getElementById('nav-toggle');
+            const mainNav = document.getElementById('main-navigation');
+            const mainHeader = document.getElementById('main-header');
+
+            navToggle.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                mainHeader.classList.toggle('active-header');
+            });
+        });
+
+        // 프로필
+        function confirmDelete() {
+            if (confirm("정말로 회원 탈퇴하시겠습니까?")) {
+                deleteUser();
+            }
+        }
+
+        async function deleteUser() {
+            try {
+                const response = await fetch('/api/users/delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    alert('회원 탈퇴가 완료되었습니다.');
+                    window.location.href = '/signin';
+                } else {
+                    const result = await response.json();
+                    alert(`회원 탈퇴 실패: ${result.msg}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('회원 탈퇴 중 오류가 발생했습니다.');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>친구 추가</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/add_friend.css">
+</head>
+<body>
+<div id="wrap">
+    <header id="main-header">
+        <a href="/">
+            <img src="/images/logo.svg" alt="logo" class="logo">
+        </a>
+        <button id="nav-toggle" class="nav-toggle">
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+        </button>
+        <nav id="main-navigation">
+            <ul class="menu">
+                <li class="menu-item"><button onclick="window.location.href='/mandalart'" class="nav-button">My Mandalart</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/share'" class="nav-button active">Share</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/calendar'" class="nav-button">Calendar</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/profile'" class="nav-button">Profile</button></li>
+            </ul>
+        </nav>
+    </header>
+<div id="add">
+    <main>
+        <div class="search">
+            <img src="/images/search_icon.svg" alt="검색" class="search-icon">
+            <input class="inputCode" type="text" id="search" placeholder="친구 ID 입력">
+            <button class="search-button" onclick="searchUser()">검색</button>
+        </div>
+        <div id="userResult" style="display: none;">
+            <div class="user-nickname" id="userName"></div>
+            <button class="add-button" onclick="follow()">추가</button>
+        </div>
+    </main>
+</div>
+</div>
+<footer>
+    <p>
+        <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+        <span class="dev">Developer</span>
+        <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+        <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+    </p>
+</footer>
+
+<script>
+    // 모바일 네비바
+    document.addEventListener('DOMContentLoaded', () => {
+        const navToggle = document.getElementById('nav-toggle');
+        const mainNav = document.getElementById('main-navigation');
+        const mainHeader = document.getElementById('main-header');
+
+        navToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            mainHeader.classList.toggle('active-header');
+        });
+    });
+    
+    // 친구 추가
+    document.addEventListener('DOMContentLoaded', (event) => {
+        console.log("DOM fully loaded and parsed");
+
+        // Event listener for Enter key on the search input
+        document.getElementById('search').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                searchUser();
+            }
+        });
+    });
+
+    async function searchUser() {
+        const friendId = document.getElementById('search').value;
+        console.log("Friend ID:", friendId);  // 디버깅용 로그
+        try {
+            const response = await fetch('/api/add_friend/searchUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: friendId })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Search response data:", data);  // 디버깅용 로그
+                if (data.user) {
+                    document.getElementById('userName').innerText = data.user.user_nickname;
+                    document.getElementById('userResult').style.display = 'flex';
+                }
+            } else {
+                throw new Error('검색 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+            alert('사용자를 찾을 수 없습니다.'); // 에러
+        }
+    }
+
+    async function getLoggedInUserId() {
+        try {
+            const response = await fetch('/api/add_friend/currentUserId');
+            if (!response.ok) {
+                throw new Error('Failed to fetch user ID');
+            }
+            const data = await response.json();
+            console.log("Logged in User ID:", data.user_id);  // 디버깅용 로그
+            return data.user_id;
+        } catch (error) {
+            console.error('Error:', error.message);
+            return null;
+        }
+    }
+
+    async function follow() {
+        const friendId = document.getElementById('search').value;
+        const yourUserId = await getLoggedInUserId();
+        console.log("Logged in User ID:", yourUserId);  // 디버깅용 로그
+        console.log("Friend ID to add:", friendId);  // 디버깅용 로그
+
+        try {
+            const response = await fetch('/api/add_friend/follow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ to_user_id: friendId })
+            });
+
+            if (!response.ok) {
+                throw new Error('친구 추가 중 오류가 발생했습니다.');
+            }
+
+            const data = await response.json();
+            console.log("Follow response data:", data);  // 디버깅용 로그
+            if (data.msg === 'Followed successfully') {
+                alert('친구가 추가되었습니다.');
+                document.getElementById('search').value = ''; // 검색창 값 초기화
+                document.getElementById('userResult').style.display = 'none'; // 검색 결과 숨기기
+            } else {
+                throw new Error('친구 추가 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+            alert('친구 추가 중 오류가 발생했습니다.');
+        }
+    }
+</script>
+</body>
+</html>

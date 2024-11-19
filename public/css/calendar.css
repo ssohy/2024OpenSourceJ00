@@ -1,0 +1,129 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #FFFBF1;
+    overflow-x: hidden;
+}
+
+/* 기본 스타일 */
+#page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    padding: 20px;
+    position: relative; /* 네비게이션 바를 고려한 설정 */
+}
+
+#calendar {
+    width: 50%;
+    min-width: 300px;
+    height: auto;
+}
+
+#details {
+    display: none;
+    width: 30%;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 10px;
+    position: relative; /* 네비게이션 바를 고려한 설정 */
+}
+
+.todo-tabs-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+}
+
+.todo-tab {
+    display: inline-block;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    border-bottom: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-right: 5px;
+    margin-bottom: -2px;
+}
+
+.todo-tab.active {
+    background-color: #D1E4BE;
+    font-weight: bold;
+    border-color: #ddd;
+}
+
+.checklist-container {
+    display: none;
+}
+
+.checklist-container.active {
+    display: block;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checklist-item input {
+    margin-right: 10px;
+}
+
+.todo-content {
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-height: 100px;
+}
+
+.empty-message {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+.fc-today {
+    background-color: #D1E4BE !important;
+    color: #000;
+}
+
+.today-label {
+    color: #006735;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 모바일 스타일 */
+@media (max-width: 768px) {
+    #page-wrapper {
+        flex-direction: column; /* 세로로 나열 */
+        align-items: center; /* 중앙 정렬 */
+        gap: 20px;
+    }
+
+    #calendar, #details {
+        width: 100%; /* 전체 너비 사용 */
+        min-width: unset; /* 최소 너비 해제 */
+    }
+
+    #details {
+        display: block; /* 체크리스트 영역 표시 */
+    }
+}
+
+@media (max-width: 480px) {
+    #page-wrapper {
+        padding: 10px; /* 여백 축소 */
+    }
+
+    .todo-tab {
+        padding: 5px 10px; /* 탭의 패딩 축소 */
+    }
+}

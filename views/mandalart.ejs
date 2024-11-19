@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mandalart</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/mandalart.css">
+</head>
+<body>
+    <div id="wrap">
+    <header id="main-header">
+        <a href="/">
+            <img src="/images/logo.svg" alt="logo" class="logo">
+        </a>
+        <button id="nav-toggle" class="nav-toggle">
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+        </button>
+        <nav id="main-navigation">
+            <ul class="menu">
+                <li class="menu-item"><button onclick="window.location.href='/mandalart'" class="nav-button active">My Mandalart</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/share'" class="nav-button">Share</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/calendar'" class="nav-button">Calendar</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/profile'" class="nav-button">Profile</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container container0">
+        <% if (tedolists && tedolists.length > 0) { %>
+            <div id="mandalart-grid" class="mandalart grid-<%= mandalart.tedolist_count %>"></div>
+            <div id="checklist-container" class="container arr2-container" style="display:none;">
+                <div class="editContainer">
+                    <h2>CREATE</h2>
+                    <form id="checklist-form">
+                        <input type="hidden" name="tedolistNumber" id="tedolistNumber">
+                        <input type="hidden" name="mandalart_id" value="<%= mandalart.mandalart_id %>">
+                        <label for="checklist">체크리스트</label>
+                        <br>
+                        <input type="text" name="checklistDetail" id="checklist">
+                        <br>
+                        <button type="submit" id="addBtn">추가하기</button>
+                    </form>
+                    <ul id="checklist-list"></ul>
+                    <div class="save-button-container">
+                        <button id="save-mandalart" onclick="saveMandalart()">저장하기</button>
+                    </div>
+                </div>
+                
+                
+            </div>
+                <% tedolists.forEach((tedolist, index) => { %>
+                    <input type="text" class="tedolist-detail-input" value="<%= tedolist.tedolist_detail %>" readonly />
+                    <input type="hidden" class="tedolist-number" value="<%= tedolist.tedolist_number %>" />
+                    <% if (checklists[tedolist.tedolist_number]) { %>
+                        <ul class="checklist" id="checklist-<%= tedolist.tedolist_number %>" style="display:none;">
+                            <% checklists[tedolist.tedolist_number].forEach(checklist => { %>
+                                <li><%= checklist.checklist_detail %></li>
+                            <% }); %>
+                        </ul>
+                    <% } %>
+                <% }); %>
+        <% } else { %>
+            <div class="container arr1-container"> 
+                <div id="mandalart-grid" class="mandalart grid-<%= mandalart.tedolist_count %>"></div>
+                <div class="editContainer">
+                    <h2>CREATE</h2>
+                    <form id="tedolist-form" action="/mandalart/addTedolist" method="POST">
+                        <input type="hidden" name="mandalartId" value="<%= mandalart.mandalart_id %>">
+                        <label for="tedolistDetails">테두리스트 ( , 로 구분)</label><br>
+                        <textarea name="tedolistDetails" id="tedolistDetails" rows="<%= mandalart.tedolist_count %>"></textarea>
+                        <button type="submit" class="create-button">추가</button>
+                    </form>
+                </div>
+            </div>
+        <% } %>
+        
+    </div>
+    </div>
+
+    <footer>
+        <p>
+            <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+            <span class="dev">Developer</span>
+            <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+            <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+        </p>
+    </footer>
+
+    
+
+    <script>
+        // 모바일 네비바
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.getElementById('nav-toggle');
+            const mainNav = document.getElementById('main-navigation');
+            const mainHeader = document.getElementById('main-header');
+
+            navToggle.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                mainHeader.classList.toggle('active-header');
+            });
+        });
+
+        // 만다라트
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.mandalart');
+            const centerGoal = '<%= mandalart.centerGoal %>';
+            const tedolistCount = <%= mandalart.tedolist_count %>;
+
+            if (container) {
+                if (tedolistCount > 0) {
+                    generateMandalart(container, centerGoal, tedolistCount);
+                    addCellClickHandlers('<%= mandalart.mandalart_id %>');
+                    addChecklistFormHandler('<%= mandalart.mandalart_id %>');
+                }
+            }
+        });
+
+        function generateMandalart(container, centerGoal, numCells) {
+            const positions = getPositions(numCells);
+
+            positions.forEach((pos, index) => {
+                const cell = document.createElement('div');
+                cell.classList.add('cell', pos);
+                cell.dataset.position = pos;
+
+                const inputDetail = document.querySelectorAll('.tedolist-detail-input')[index];
+                const inputNumber = document.querySelectorAll('.tedolist-number')[index];
+
+                if (inputDetail && inputNumber) {
+                    const textDiv = document.createElement('div');
+                    textDiv.classList.add('cell-text');
+                    textDiv.innerText = inputDetail.value;
+                    cell.dataset.tedolistNumber = inputNumber.value;
+                    cell.dataset.hasTedolistDetail = "true";  // Adding a data attribute to indicate the cell has tedolist detail
+                    cell.appendChild(textDiv);
+                } else {
+                    cell.dataset.hasTedolistDetail = "false";
+                }
+
+                container.appendChild(cell);
+            });
+
+            const centerCell = document.createElement('div');
+            centerCell.classList.add('cell', 'center');
+            centerCell.dataset.position = 'center';
+            centerCell.innerText = centerGoal;
+            container.appendChild(centerCell);
+        }
+
+        function getPositions(numCells) {
+            switch (numCells) {
+                case 2:
+                    return ["left", "right"];
+                case 3:
+                    return ["left", "right", "down"];
+                case 4:
+                    return ["up", "left", "right", "down"];
+                case 5:
+                    return [ "left", "right", "down-left", "down-right", "up"];
+                case 6:
+                    return [ "up-left", "up-right", "down", "down-left", "down-right","up"];
+                case 7:
+                    return ["up-left", "up-right", "left", "right", "down-left", "down-right", "down"];
+                case 8:
+                    return ["up-left", "up-right", "up", "left", "right", "down-left", "down-right", "down"];
+                default:
+                    return [];
+            }
+        }
+
+        function addCellClickHandlers(mandalartId) {
+            const cells = document.querySelectorAll('.mandalart .cell');
+            cells.forEach(cell => {
+                if (!cell.classList.contains('center')) {
+                    cell.addEventListener('click', async (event) => {
+                        if (cell.dataset.hasTedolistDetail === "true") {
+                            cells.forEach(c => c.classList.remove('active'));
+                            event.target.classList.add('active');
+                            const tedolistNumber = event.target.dataset.tedolistNumber;
+                            console.log(`Tedolist Number: ${tedolistNumber}`);
+                            const input = document.querySelector('#tedolistNumber');
+                            input.value = tedolistNumber;
+                            document.querySelector('#checklist-container').style.display = 'block';
+                            await loadChecklists(mandalartId, tedolistNumber);
+                        } else {
+                            document.querySelector('#checklist-container').style.display = 'none';
+                        }
+                    });
+                }
+            });
+        }
+
+        function addChecklistFormHandler(mandalartId) {
+            const form = document.querySelector('#checklist-form');
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const formData = new FormData(form);
+                const response = await fetch('/mandalart/addChecklist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mandalart_id: formData.get('mandalart_id'),
+                        tedolistNumber: formData.get('tedolistNumber'),
+                        checklistDetail: formData.get('checklistDetail')
+                    })
+                });
+                if (response.ok) {
+                                    const tedolistNumber = formData.get('tedolistNumber');
+                                    console.log(`Checklist added for Tedolist Number: ${tedolistNumber}`);
+                                    await loadChecklists(mandalartId, tedolistNumber);
+                                    checklistDetail.value = '';
+                                }
+                                checklistDetail.value= '';
+                            });
+//                if (response.ok) {
+//                    const tedolistNumber = formData.get('tedolistNumber');
+//                    console.log(`Checklist added for Tedolist Number: ${tedolistNumber}`);
+//                    await loadChecklists(mandalartId, tedolistNumber);
+//                }
+//            });
+        }
+
+        async function loadChecklists(mandalartId, tedolistNumber) {
+            const response = await fetch(`/mandalart/checklists/${mandalartId}/${tedolistNumber}`);
+            if (response.ok) {
+                const checklists = await response.json();
+                const checklistContainer = document.querySelector('#checklist-list');
+                checklistContainer.innerHTML = '';
+                console.log(`Checklists loaded for Tedolist Number: ${tedolistNumber}`, checklists);
+                checklists.forEach(checklist => {
+                    const li = document.createElement('li');
+                    li.textContent = checklist.checklist_detail;
+                    checklistContainer.appendChild(li);
+                });
+                document.querySelector('#checklist-container').style.display = 'block'; // Show checklist container when a cell is clicked
+            }
+        }
+
+        function saveMandalart() {
+            const mandalartId = '<%= mandalart.mandalart_id %>';
+
+            // 서버에 저장 요청을 보냄
+            fetch('/mandalart/saveMandalart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ mandalartId })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // 저장이 완료되면 조회 페이지로 리디렉션
+                    window.location.href = `/mandalart/view/${mandalartId}`;
+                } else {
+                    alert('Failed to save Mandalart');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to save Mandalart');
+            });
+        }
+    </script>
+</body>
+</html>

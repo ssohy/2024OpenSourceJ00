@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in</title>
+    <link rel="stylesheet" href="/css/signin.css">
+</head>
+<body>
+    <img src="/images/logo.svg" alt="Logo" class="logo">
+    <div class="signin-container">
+        <div class="signin-box">
+            <h2>Sign in</h2>
+            <form id="signinForm" action="/api/users/signin" method="POST"> 
+                <div class="input-group">
+                    <input type="text" name="user_id" placeholder="ID" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="user_pw" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn">로그인</button>
+            </form>
+            <a href="/signup" class="signup-link">회원가입 하기 ></a>
+        </div>
+    </div>
+
+    <script>
+        // 로그인
+        document.getElementById('signinForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new URLSearchParams(new FormData(form)).toString();
+
+            const response = await fetch(form.action, {
+                method: form.method,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: formData,
+            });
+            if (response.ok) {
+                //alert('로그인에 성공했습니다!');
+                window.location.href = '/';
+            } else {
+                const result = await response.json();
+                alert(result.msg || '로그인에 실패했습니다. 다시 시도해주세요.');
+            }
+        });
+    </script>
+
+</body>
+</html>

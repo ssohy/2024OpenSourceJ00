@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Mandalart</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/editMandalart.css">
+    <style>
+        .center {
+            background: #D1E4BE;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+    <header id="main-header">
+        <a href="/">
+            <img src="/images/logo.svg" alt="logo" class="logo">
+        </a>
+        <button id="nav-toggle" class="nav-toggle">
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+        </button>
+        <nav id="main-navigation">
+            <ul class="menu">
+                <li class="menu-item"><button onclick="window.location.href='/mandalart'" class="nav-button active">My Mandalart</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/share'" class="nav-button">Share</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/calendar'" class="nav-button">Calendar</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/profile'" class="nav-button">Profile</button></li>
+            </ul>
+        </nav>
+    </header>
+
+        <div class="container">
+            <form id="mandalart-form" action="/mandalart/update/<%= mandalart.mandalart_id %>" method="POST">
+                <h3>나의 만다라트</h3>
+            
+                <div id="mandalart-grid" class="mandalart grid-<%= mandalart.tedolist_count %> sortMine">
+                    <% function getCellClass(index, count) { 
+                        const classes = [
+                            ['center'],
+                            ['left', 'right'],
+                            ['left', 'right', 'down'],
+                            ['up', 'left', 'right', 'down'],
+                            ['up', 'left', 'right', 'down-left', 'down-right'],
+                            ['up', 'up-left', 'up-right', 'down', 'down-left', 'down-right'],
+                            ['up-left', 'up-right', 'left', 'right', 'down-left', 'down', 'down-right'],
+                            ['up-left', 'up', 'up-right', 'left', 'right', 'down-left', 'down', 'down-right']
+                        ];
+                        return classes[count - 1][index] || '';
+                    } %>
+                    <% tedolists.forEach((tedolist, index) => { %>
+                        <div class="cell <%= getCellClass(index, mandalart.tedolist_count) %>" data-tedolist-number="<%= tedolist.tedolist_number %>">
+                            <div class="cell-content">
+                                <div class="cell-text">
+                                    <%= tedolist.tedolist_detail %>
+                                </div>
+                                <div class="cell-image">
+                                    <div class="sticker">
+                                        <!-- 기존 코드를 다음과 같이 수정합니다 -->
+                                        <% if (tedolist.tedolist_sticker) { %>
+                                            <img src="<%= tedolist.tedolist_sticker %>" alt="sticker" class="sticker">
+                                        <% } %>
+                                    </div>                 
+                                </div>
+                            </div>                        
+                            <input type="text" class="tedolist-detail-input" name="tedolistDetails[<%= index %>][tedolist_detail]" value="<%= tedolist.tedolist_detail %>" />
+                            <input type="hidden" name="tedolistDetails[<%= index %>][tedolist_number]" value="<%= tedolist.tedolist_number %>" />
+                        </div>
+                    <% }); %>                   
+                    <div class="cell center" id="cell center">
+                        <div class="center-goal-text"><%= mandalart.centerGoal %></div>
+                    </div>
+                </div>
+                
+                <div class="button-container sortMine">
+                    <button class="btn" id="submit-button" type="submit">완료</button>
+                    <button class="btn delete-btn" type="submit" form="delete-mandalart-form">현재 만다라트 삭제하기</button>
+                </div>
+                <br>
+            </form>
+
+            <div id="checklist-container" class="sortMine">
+                <% if (isMember) { %>
+                    <form id="change_color" action="/mandalart/update/center_color/<%= mandalart.mandalart_id %>" method="POST">
+                        <div class="color-container">
+                            <button type="submit" name="color" value="green" class="mandalart-color" id="green"></button>
+                            <button type="submit" name="color" value="yellow" class="mandalart-color" id="yellow"></button>
+                            <button type="submit" name="color" value="blue" class="mandalart-color" id="blue"></button>
+                        </div>
+                    </form>
+
+            
+                    <div class="sticker-container">
+                    <div class="sticker" id="sticker1">
+                        <img src="/images/sticker1.png" alt="sticker" class="sticker">
+                    </div>
+                    <div class="sticker" id="sticker2">
+                        <img src="/images/sticker2.png" alt="sticker" class="sticker">
+                    </div>
+                    <div class="sticker" id="sticker3">
+                        <img src="/images/sticker3.png" alt="sticker" class="sticker">
+                    </div>
+                    <div class="sticker" id="sticker4">
+                        <img src="/images/sticker4.png" alt="sticker" class="sticker">
+                    </div>
+                    <div class="sticker" id="sticker5">
+                        <img src="/images/sticker5.png" alt="sticker" class="sticker">
+                    </div>
+                    <div class="sticker" id="sticker6">
+                        <img src="/images/sticker6.png" alt="sticker" class="sticker">
+                    </div>
+                    <div class="sticker" id="sticker7">
+                        <img src="/images/sticker7.png" alt="sticker" class="sticker">
+                    </div>
+                    <div class="sticker" id="sticker8">
+                        <img src="/images/sticker8.png" alt="sticker" class="sticker">
+                    </div>
+                    </div>            
+                <% } %> 
+                <h4>체크리스트</h4>
+
+                <ul id="checklist-list"></ul>
+                <form id="checklist-form">
+                    <input type="hidden" name="tedolistNumber" id="tedolistNumber">
+                    <input type="hidden" name="mandalart_id" value="<%= mandalart.mandalart_id %>">
+                    <label for="checklistDetail">새로 추가하기</label>
+                    <input type="text" name="checklistDetail" id="checklistDetail">
+                    <button type="submit" class="btn">저장</button>
+                </form>
+            </div>
+
+            <!-- 만다라트 삭제 버튼 -->
+            <form id="delete-mandalart-form" action="/mandalart/delete/<%= mandalart.mandalart_id %>" method="POST" onsubmit="return confirmDelete()">
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>
+            <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+            <span class="dev">Developer</span>
+            <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+            <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+        </p>
+    </footer>
+
+    <script>
+        // 모바일 네비바
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.getElementById('nav-toggle');
+            const mainNav = document.getElementById('main-navigation');
+            const mainHeader = document.getElementById('main-header');
+    
+            navToggle.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                mainHeader.classList.toggle('active-header');
+            });
+    
+            // 만다라트 수정
+            const container = document.querySelector('.mandalart');
+            const tedolistCount = <%= mandalart.tedolist_count %>;
+    
+            if (container && tedolistCount > 0) {
+                setupMandalartHandlers('<%= mandalart.mandalart_id %>');
+            }
+        });
+    
+        function setupMandalartHandlers(mandalartId) {
+            enableTedolistEditing();
+            applyColorToCell();
+            setupStickerHandlers();
+            addCellClickHandlers(mandalartId);
+            addChecklistFormHandler(mandalartId);
+        }
+    
+        function enableTedolistEditing() {
+            const inputs = document.querySelectorAll('.tedolist-detail-input');
+            inputs.forEach(input => {
+                const textDiv = input.previousElementSibling;
+                textDiv.addEventListener('click', () => {
+                    textDiv.style.display = 'none';
+                    input.style.display = 'block';
+                    input.focus();
+                });
+    
+                input.addEventListener('blur', () => {
+                    textDiv.innerText = input.value;
+                    textDiv.style.display = 'block';
+                    input.style.display = 'none';
+                });
+            });
+        }
+    
+        function addChecklistFormHandler(mandalartId) {
+            const form = document.querySelector('#checklist-form');
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const formData = new FormData(form);
+                const response = await fetch('/mandalart/addChecklist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mandalart_id: formData.get('mandalart_id'),
+                        tedolistNumber: formData.get('tedolistNumber'),
+                        checklistDetail: formData.get('checklistDetail')
+                    })
+                });
+                if (response.ok) {
+                    const tedolistNumber = formData.get('tedolistNumber');
+                    await loadChecklists(mandalartId, tedolistNumber);
+                    document.querySelector('#checklistDetail').value = '';  // 폼 필드 초기화
+                } else {
+                    console.error('Failed to add checklist item');
+                }
+            });
+        }
+    
+        async function loadChecklists(mandalartId, tedolistNumber) {
+            const response = await fetch(`/mandalart/checklists/${mandalartId}/${tedolistNumber}`);
+            if (response.ok) {
+                const checklists = await response.json();
+                const checklistContainer = document.querySelector('#checklist-list');
+                checklistContainer.innerHTML = '';
+                checklists.forEach(checklist => {
+                    const li = document.createElement('li');
+                    li.classList.add('checklist-item');
+                    li.innerHTML = `
+                        <span>${checklist.checklist_detail}</span>
+                        <span class="delete-checklist" data-checklist-id="${checklist.checklist_id}">X</span>
+                    `;
+                    checklistContainer.appendChild(li);
+                });
+    
+                document.querySelectorAll('.delete-checklist').forEach(button => {
+                    button.addEventListener('click', async (event) => {
+                        const checklistId = event.target.dataset.checklistId;
+                        await deleteChecklist(checklistId);
+                        await loadChecklists(mandalartId, tedolistNumber);
+                    });
+                });
+            }
+        }
+    
+        async function deleteChecklist(checklistId) {
+            const response = await fetch(`/mandalart/deleteChecklist/${checklistId}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) {
+                console.error('Failed to delete checklist item');
+            }
+        }
+    
+        function confirmDelete() {
+            return confirm('정말로 현재 만다라트를 삭제하시겠습니까?');
+        }
+
+
+        // 색상 클릭시 중심 색 변경 코드
+        let tmpCenterColor = '';
+        function applyColorToCell() {
+            const colorElements = document.querySelectorAll('.mandalart-color');
+            const colorInput = document.getElementById('color-input');
+            const cellCenter = document.querySelector('.cell.center');
+
+            const colorMapping = {
+                'green': '#D1E4BE',
+                'yellow': '#F3E5BB',
+                'blue': '#D9E6F5'
+            };
+
+            colorElements.forEach(element => {
+                element.addEventListener('click', function() {
+                    const selectedColorId = element.id;
+                    const selectedColor = colorMapping[selectedColorId];
+                    cellCenter.style.backgroundColor = selectedColor;
+                    colorInput.value = selectedColorId;
+
+                    if (selectedColorId === 'yellow') {
+                        tmpCenterColor = 'yellow';
+                    } else if (selectedColorId === 'blue') {
+                        tmpCenterColor = 'blue';
+                    } else {
+                        tmpCenterColor = 'green';
+                    }
+
+                });
+            });
+            const cells = document.querySelectorAll('.mandalart .cell');
+        }
+
+        function addCellClickHandlers(mandalartId) {
+            const cells = document.querySelectorAll('.mandalart .cell');
+            const cellCenter = document.querySelector('.cell.center');
+
+            cells.forEach(cell => {
+                if (!cell.classList.contains('center')) {
+                    cell.addEventListener('click', async (event) => {
+                        // centerCell의 색상을 유지한 상태에서 나머지 셀의 배경색 초기화
+                        cells.forEach(c => {
+                            if (!c.classList.contains('center')) {
+                                c.classList.remove('active');
+                                c.style.backgroundColor = ''; // 배경색 초기화
+                            }
+                        });
+
+                        // 현재 선택된 셀에 active 클래스 추가 및 색상 적용
+                        cell.classList.add('active');
+                        
+                        // tmpCenterColor에 따라 선택된 셀의 색상 적용
+                        let activeColor;
+                        if (tmpCenterColor === 'yellow') {
+                            activeColor = '#FFF8E3';
+                        } else if (tmpCenterColor === 'blue') {
+                            activeColor = '#EAF4FF';
+                        } else {
+                            activeColor = '#F4FFE8';
+                        }
+
+                        cell.style.backgroundColor = activeColor;
+                        console.log("Clicked Cell Background Color:", cell.style.backgroundColor);  // 디버깅용 로그
+
+                        const tedolistNumber = event.target.dataset.tedolistNumber;
+                        if (tedolistNumber) {
+                            await loadChecklists(mandalartId, tedolistNumber);
+                        } else {
+                            document.querySelector('#checklist-container').style.display = 'none';
+                        }
+                    });
+                }
+            });
+        }
+    
+        // 초기화 시 centerColor 설정
+        var centerColor = "<%= mandalart.center_color %>";
+        var centerGoalText = document.getElementById('cell center');
+
+        if (centerColor === 'yellow') {
+            centerGoalText.style.backgroundColor = '#F3E5BB';
+            tmpCenterColor = 'yellow';  // 추가
+        } else if (centerColor === 'blue') {
+            centerGoalText.style.backgroundColor = '#D9E6F5';
+            tmpCenterColor = 'blue';  // 추가
+        } else {
+            centerGoalText.style.backgroundColor = '#D1E4BE';
+            tmpCenterColor = 'green';  // 추가
+        }
+
+        // 스티커 추가 코드
+        function setupStickerHandlers() {
+            const cells = document.querySelectorAll('.mandalart .cell');
+            let selectedCell = null;
+    
+            // 셀 클릭 시 선택 상태 표시
+            cells.forEach(cell => {
+                if (!cell.classList.contains('center')) {
+                    cell.addEventListener('click', function () {
+                        if (selectedCell) {
+                            selectedCell.classList.remove('selected');
+                        }
+    
+                        cell.classList.add('selected');
+                        selectedCell = cell;
+    
+                        const tedolistNumber = cell.dataset.tedolistNumber;
+                        document.querySelector('#tedolistNumber').value = tedolistNumber;
+                    });
+                }
+            });
+    
+            // 스티커 클릭 시 선택된 셀에 추가
+            const stickers = document.querySelectorAll('.sticker-container .sticker');
+            stickers.forEach(sticker => {
+                sticker.addEventListener('click', function (event) {
+                    if (!selectedCell) {
+                        event.stopImmediatePropagation();
+                        alert('먼저 테두리스트를 선택하세요.');
+                        return;
+                    }
+    
+                    const stickerImage = sticker.querySelector('img').cloneNode(true);
+                    const cellImageDiv = selectedCell.querySelector('.cell-image .sticker');
+    
+                    cellImageDiv.innerHTML = '';  // 기존 스티커를 지우고
+                    cellImageDiv.appendChild(stickerImage);  // 새로운 스티커를 추가
+    
+                    const tedolistNumber = selectedCell.dataset.tedolistNumber;
+                    const stickerSrc = stickerImage.src;
+    
+                    // 스티커 변경을 서버에 저장하는 API 호출
+                    saveStickerToServer(tedolistNumber, stickerSrc);
+                });
+            });
+        }
+    
+        function saveStickerToServer(tedolistNumber, stickerSrc) {
+            const mandalartId = '<%= mandalart.mandalart_id %>';
+            fetch(`/mandalart/updateSticker`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mandalart_id: mandalartId,
+                    tedolistNumber: tedolistNumber,
+                    stickerSrc: stickerSrc
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Sticker updated successfully.');
+                } else {
+                    console.error('Failed to update sticker.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

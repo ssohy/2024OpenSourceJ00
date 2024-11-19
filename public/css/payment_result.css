@@ -1,0 +1,45 @@
+.main {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.title {
+    margin-top: 2rem;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #006735;
+}
+
+.subtitle {
+    font-weight: 500;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+}
+
+#orderId {
+    margin-top: 1rem;
+}
+
+#paymentKey,#orderId,#amount {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    #paymentKey,#orderId,#amount {
+        font-size: 0.7rem;
+    }
+}

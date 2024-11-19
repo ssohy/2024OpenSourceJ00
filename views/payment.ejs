@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://js.tosspayments.com/v2/standard"></script>
+  </head>
+    <title>payments</title>
+</head>
+<body>
+  <div id="wrap">
+    <!-- 결제 UI -->
+    <div id="payment-method"></div>
+    <!-- 이용약관 UI -->
+    <div id="agreement"></div>
+    <!-- 결제하기 버튼 -->
+    <button class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+  </div>
+    <footer>
+      <p>
+          <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+          <span class="dev">Developer</span>
+          <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+          <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+      </p>
+  </footer>
+
+    <script>
+      main();
+
+      async function main() {
+        const button = document.getElementById("payment-button");
+        // ------  결제위젯 초기화 ------
+        const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+        const tossPayments = TossPayments(clientKey);
+        // 회원 결제
+        const customerKey = "efjnYlU4mBqu5EEv6kQ2S";
+        const widgets = tossPayments.widgets({
+          customerKey,
+        });
+        // 비회원 결제
+        // const widgets = tossPayments.widgets({ customerKey: TossPayments.ANONYMOUS });
+
+        // ------ 주문의 결제 금액 설정 ------
+        await widgets.setAmount({
+          currency: "KRW",
+          value: 2990,
+        });
+
+        await Promise.all([
+          // ------  결제 UI 렌더링 ------
+          widgets.renderPaymentMethods({
+            selector: "#payment-method",
+            variantKey: "DEFAULT",
+          }),
+          // ------  이용약관 UI 렌더링 ------
+          widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" }),
+        ]);
+
+        // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+        button.addEventListener("click", async function () {
+          const orderId = generateOrderId();
+
+          await widgets.requestPayment({
+            orderId: orderId,
+            orderName: "J00% 멤버십 평생 구독",
+            successUrl: window.location.origin + "/success",
+            failUrl: window.location.origin + "/fail",
+            customerEmail: "customer123@gmail.com",
+            customerName: "김토스",
+            customerMobilePhone: "01012341234",
+          });
+        });
+
+        // 고유한 16자리 16진수 orderId 생성 함수
+        function generateOrderId() {
+          return [...crypto.getRandomValues(new Uint8Array(8))]
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+        }
+      }
+    </script>
+</body>

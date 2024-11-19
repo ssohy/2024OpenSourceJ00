@@ -1,0 +1,94 @@
+/* 로그인/로그아웃 버튼 */
+button{
+    color: black;
+    border: none;
+    background-color: #FFFBF1;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.main-content h1 {
+    font-size: 100px;
+    color: #006400; /* Dark green color */
+    margin: 0;
+}
+
+.main-content p {
+    font-size: 24px;
+    color: #006400; /* Dark green color */
+    margin: 0;
+}
+
+.signup-link{
+    margin-left: 10px;
+}
+
+
+.container {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.logo-large {
+    width: 600px;
+    margin-bottom: 10px;
+}
+
+.container h1 {
+    font-size: 40px;
+    color: #006735;
+    font-weight: 100;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    button{
+        border: none;
+        background-color: #F4FFE8;
+    }
+
+    .logo-large {
+        width: 400px;
+    }
+
+    .container h1 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .logo-large {
+        width: 200px;
+    }
+
+    .container h1 {
+        font-size: 10px;
+    }
+}
+
+/* 모바일 가로모드 */
+@media (orientation: landscape) and (max-height: 768px) {
+    button{
+        border: none;
+        background-color: #F4FFE8;
+    }
+
+    .container {
+        text-align: center;
+        margin-top: 0px;
+    }
+    .logo-large {
+        width: 340px;
+    }
+
+    .container h1 {
+        font-size: 20px;
+    }
+
+}

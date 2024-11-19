@@ -1,0 +1,131 @@
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0; /* 추가된 여백이 없도록 설정 */
+}
+
+.flex-fill {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 60px);
+    width: 100%;
+}
+
+.form-container {
+    background: #fff;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.create-button {
+    padding: 10px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.create-button:hover {
+    background-color: #ccc;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    #container {
+        min-height: 70vh; /* 화면 전체 높이로 설정 */
+    }
+    .form-container {
+        max-width: 300px; /* 모바일 화면에서 너비 100% */
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    input {
+        font-size: 13px;
+    }
+
+    .create-button {
+        font-size: 15px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        max-width: 300px; /* 작은 화면에서 너비 100% */
+        padding: 15px;
+        margin: 0 auto; /* 자동 마진을 추가하여 중앙에 위치 */
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+
+    input {
+        font-size: 12px;
+    }
+
+    .create-button {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

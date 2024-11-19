@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/calendar.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="wrap">
+    <header id="main-header">
+        <a href="/">
+            <img src="/images/logo.svg" alt="logo" class="logo">
+        </a>
+        <button id="nav-toggle" class="nav-toggle">
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+            <span class="nav-icon"></span>
+        </button>
+        <nav id="main-navigation">
+            <ul class="menu">
+                <li class="menu-item"><button onclick="window.location.href='/mandalart'" class="nav-button">My Mandalart</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/share'" class="nav-button">Share</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/calendar'" class="nav-button active">Calendar</button></li>
+                <li class="menu-item"><button onclick="window.location.href='/profile'" class="nav-button">Profile</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="page-wrapper">
+        <div id="calendar"></div>
+        <div id="details">
+            <h3 class="today-label"><span id="selected-date"></span></h3>
+            <div class="todo-tabs-container" id="tedolist-tabs"></div>
+            <div class="todo-content" id="checklist-content"></div>
+        </div>
+    </div>
+    </div> 
+    <footer>
+        <p>
+            <img src="/images/pc-footer.png" alt="footer-pc-logo" class="footer-pc-logo"><br/>
+            <span class="dev">Developer</span>
+            <span class="dev-name">강다인   김현수   송혜음   이예령   전소현   한세나</span><br/>
+            <span class="copyright">Copyright 2024 SECRETJOOJOO All rights reserved.</span>
+        </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script>
+        
+        // 모바일 네비바
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.getElementById('nav-toggle');
+            const mainNav = document.getElementById('main-navigation');
+            const mainHeader = document.getElementById('main-header');
+            const calendarElement = document.getElementById('calendar');
+
+            navToggle.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                mainHeader.classList.toggle('active-header');
+
+                if (mainNav.classList.contains('active')) {
+                    calendarElement.style.zIndex = '-100000'; // z-index를 낮춰서 네비게이션 바가 위로 오게 설정
+                } else {
+                    calendarElement.style.zIndex = 'auto'; // z-index를 기본값으로 되돌림
+                }
+            });
+        });
+
+        // 캘린더
+        $(document).ready(function() {
+            $('#calendar').fullCalendar({
+                locale: 'ko', // 한국어로 설정
+                defaultView: 'month',
+                dayClick: function(date, jsEvent, view) {
+                    var selectedDate = date.format('YYYY-MM-DD');
+                    $('#selected-date').text(selectedDate);
+                    loadDetails(selectedDate);
+                }
+            });
+
+            async function loadDetails(date) {
+                const response = await fetch(`/calendar/details/${date}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const tedolistTabsContainer = $('#tedolist-tabs');
+                    const checklistContent = $('#checklist-content');
+
+                    tedolistTabsContainer.html('');
+                    checklistContent.html('');
+
+                    if (data.tedolist.length > 0) {
+                        data.tedolist.forEach((tedolist, index) => {
+                            const tabId = `tab-${index}`;
+                            const checklistId = `checklist-${index}`;
+                            const isActive = index === 0 ? 'active' : '';
+
+                            tedolistTabsContainer.append(`
+                                <div class="todo-tab ${isActive}" id="${tabId}" data-checklist="${checklistId}">
+                                    ${tedolist.detail}
+                                </div>
+                            `);
+
+                            if (tedolist.checklists.length > 0) {
+                                const checklistHTML = tedolist.checklists.map(checklist => `
+                                    <div class="checklist-item">
+                                        <input type="checkbox" ${checklist.is_checked ? 'checked' : ''}>
+                                        <span>${checklist.detail}</span>
+                                    </div>
+                                `).join('');
+
+                                checklistContent.append(`
+                                    <div class="checklist-container ${isActive}" id="${checklistId}">
+                                        ${checklistHTML}
+                                    </div>
+                                `);
+                            } else {
+                                checklistContent.append(`
+                                    <div class="checklist-container ${isActive}" id="${checklistId}">
+                                        <p class="empty-message">해당 날짜에는 체크리스트를 작성하지 않았습니다</p>
+                                    </div>
+                                `);
+                            }
+                        });
+
+                        $('.todo-tab').click(function() {
+                            const selectedTab = $(this);
+                            const selectedChecklist = selectedTab.data('checklist');
+
+                            $('.todo-tab').removeClass('active');
+                            $('.checklist-container').removeClass('active');
+
+                            selectedTab.addClass('active');
+                            $(`#${selectedChecklist}`).addClass('active');
+                        });
+                    } else {
+                        checklistContent.append('<p class="empty-message">해당 날짜에는 체크리스트를 작성하지 않았습니다</p>');
+                    }
+
+                    $('#details').show();
+                } else {
+                    console.error('Failed to load details');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

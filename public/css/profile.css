@@ -1,0 +1,108 @@
+main {
+    padding: 2rem;
+}
+
+.profile-section {
+    margin-bottom: 2rem;
+}
+
+.profile-section h2 {
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 2rem;
+}
+
+.profile-section h2,.membership-icon {
+    height: 2rem;
+    object-fit: contain;
+    font-size: 2rem;
+    color: #006735;
+}
+
+.membership-icon {
+    margin-left: 8px;
+}
+
+.profile-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+}
+
+.profile-card h3 {
+    margin-top: 0;
+}
+
+.achievements-section {
+    margin-bottom: 2rem;
+}
+
+.achievements-section h2 {
+    font-size: 2rem;
+    color: #006735;
+}
+
+.achievement-card {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+}
+
+.achievement-card img {
+    width: 30px;
+    height: auto;
+    margin-right: 1rem;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.user-nickname {
+    margin-left: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.profile-image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.edit-icon {
+    position: absolute;
+    bottom: -2px;
+    right: -10px;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+}
+
+.membership {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #006735;
+}
+
+a {
+    color: #006735;
+}
