@@ -108,7 +108,7 @@ app.get('/share_viewMandalart', (req, res) => {
     res.render('share_viewMandalart', { title: 'Share' });
 });
 
-//멤버쉽-설명창 라우트
+//멤버십-설명창 라우트
 app.get('/membership', (req, res) => {
     res.render('membership', {title : 'explain-membership'}); 
 });
