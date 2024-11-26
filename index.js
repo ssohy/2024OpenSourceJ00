@@ -10,11 +10,11 @@ const client = require('./db/db_connect.js');
 const { fetchUser, savePaymentInfo} = require('./db/db');
 const schedule = require('node-schedule');
 const commentRouter = require('./routes/comment');
-const calendarRouter = require('./routes/calendar'); // 추가
+const calendarRouter = require('./routes/calendar');
 const { timeLog } = require('console');
 const { title } = require('process');
-const paymentRouter = require('./routes/payment'); // 추가
-const successRouter = require('./routes/success'); // 추가
+const paymentRouter = require('./routes/payment');
+const successRouter = require('./routes/success');
 
 const app = express();
 
