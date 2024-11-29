@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const client  = require('../db/db_connect'); // MySQL 클라이언트 사용
+const client  = require('../db/db_connect');
 const USER_COOKIE_KEY = 'USER';
 
 async function queryAsync(query, params) {
@@ -28,7 +28,6 @@ async function fetchUser(user_id) {
 
 router.post('/searchUser', async (req, res) => {
     const { user_id } = req.body;
-
     try {
         const user = await fetchUser(user_id);
         if (!user) {
