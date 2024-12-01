@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: j00
+  labels:
+    app: j00
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: j00
+  template:
+    metadata:
+      labels:
+        app: j00
+        tier: j00
+    spec:
+      containers:
+        - name: j00
+        image: ssohy/j00:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5000
+          name: j00
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: j00
+  labels:
+    app: j00
+spec:
+  ports:
+    - port: 80
+    targetPort: 5000
+  selector:
+    app: j00
+    tier: j00
+  type: LoadBalancer
