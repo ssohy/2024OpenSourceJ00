@@ -10,7 +10,7 @@ USER root
 RUN npm install
 
 # 프로덕션 단계
-FROM bitnami/node:9-prod
+FROM node:18-slim
 ENV NODE_ENV="production"
 
 COPY --from=builder /app /app
