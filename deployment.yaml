@@ -19,11 +19,11 @@ spec:
     spec:
       containers:
         - name: j00
-        image: ssohy/j00:latest
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 5000
-          name: j00
+          image: ssohy/j00:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+              name: j00
 ---
 apiVersion: v1
 kind: Service
@@ -34,7 +34,7 @@ metadata:
 spec:
   ports:
     - port: 80
-    targetPort: 5000
+      targetPort: 5000
   selector:
     app: j00
     tier: j00
