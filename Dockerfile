@@ -24,4 +24,4 @@ EXPOSE 5000
 USER node
 
 # 앱 실행
-CMD ["npm"]
+CMD ["npm", "start"]
