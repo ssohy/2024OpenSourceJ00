@@ -34,7 +34,7 @@ pipeline {
                 branch 'main'
             }
             steps{
-                sh "sed -i 's/j00:latest/J00:${env.BUILD_ID}/g' deployment.yaml"
+                sh "sed -i 's/j00:latest/j00:${env.BUILD_ID}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
         }
