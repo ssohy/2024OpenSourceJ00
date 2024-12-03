@@ -4,7 +4,7 @@ pipeline {
         PROJECT_ID = 'opensource2024-440504'
         CLUSTER_NAME = 'k8s'
         LOCATION = 'asia-northeast3-a'
-        CREDENTIALS_ID = '27d81a05-5060-4aaf-8b8e-e9a8476ac940' //GKE Credential 추가 완료
+        CREDENTIALS_ID = '7fb77132-c47c-459c-a905-f8ce65f193a8' //GKE Credential 추가 완료
     }
     stages {
         stage("Checkout code") {
