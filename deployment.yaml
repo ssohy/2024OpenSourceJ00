@@ -1,41 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: J00
+  name: j00
   labels:
-    app: J00
+    app: j00
 spec:
   replicas: 3
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: J00
+      app: j00
   template:
     metadata:
       labels:
-        app: J00
-        tier: J00
+        app: j00
+        tier: j00
     spec:
       containers:
-        - name: J00
-        image: sso/J00:latest
+        - name: j00
+        image: ssohy/j00:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
-          name: J00
+          name: j00
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: J00
+  name: j00
   labels:
-    app: J00
+    app: j00
 spec:
   ports:
     - port: 80
     targetPort: 5000
   selector:
-    app: J00
-    tier: J00
+    app: j00
+    tier: j00
   type: LoadBalancer

@@ -1,4 +1,11 @@
 {
+  "name": "j00",
+  "version": "1.0.0",
+  "description": "Node.js on Docker",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "devDependencies": {
     "express": "^4.19.2"
   },
