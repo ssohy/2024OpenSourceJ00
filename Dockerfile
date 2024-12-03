@@ -7,7 +7,7 @@ COPY . /app
 WORKDIR /app
 
 USER root
-RUN apt-get update && apt-get install nodejs
+RUN npm install
 
 # 프로덕션 단계
 FROM bitnami/node:9-prod
@@ -24,4 +24,4 @@ EXPOSE 5000
 USER node
 
 # 앱 실행
-CMD ["node"]
+CMD ["npm"]
