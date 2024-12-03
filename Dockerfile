@@ -1,5 +1,5 @@
 # 빌드 단계
-FROM bitnami/node:9 as builder
+FROM bitnami/node:18 as builder
 ENV NODE_ENV="production"
 
 COPY . /app
