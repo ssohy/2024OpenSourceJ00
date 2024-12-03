@@ -10,7 +10,7 @@ const client = require('./db/db_connect.js');
 const { fetchUser, savePaymentInfo} = require('./db/db');
 const schedule = require('node-schedule');
 const commentRouter = require('./routes/comment');
-const calendarRouter = require('./routes/calendar'); // 추가
+const calendarRouter = require('./routes/calendar');
 const { timeLog } = require('console');
 const { title } = require('process');
 const paymentRouter = require('./routes/payment');
@@ -108,7 +108,7 @@ app.get('/share_viewMandalart', (req, res) => {
     res.render('share_viewMandalart', { title: 'Share' });
 });
 
-//멤버쉽-설명창 라우트
+//멤버십-설명창 라우트
 app.get('/membership', (req, res) => {
     res.render('membership', {title : 'explain-membership'}); 
 });
@@ -215,6 +215,7 @@ app.post('/logout', (req, res) => {
     res.clearCookie('USER');
     res.redirect('/signin');
 });
+
 
 // 서버 시작
 const PORT = process.env.PORT || 5006;
