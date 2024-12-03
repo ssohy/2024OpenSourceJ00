@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const usersRouter = require('./routes/users');
+// const usersRouter = require('./routes/users');
 const shareRouter = require('./routes/share');
 const addFriendRouter = require('./routes/add_friend');
 const mandalartRouter = require('./routes/mandalart'); // Import mandalart routes
@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 });
 
 // 라우트 설정
-app.use('/api/users', usersRouter);
+// app.use('/api/users', usersRouter);
 app.use('/api/share', shareRouter);
 app.use('/api/add_friend', addFriendRouter);
 app.use('/mandalart', mandalartRouter); // Use mandalart routes
