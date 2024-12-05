@@ -24,7 +24,7 @@ spec:
           ports:
             - containerPort: 5000
               name: j00
-            env:
+          env:
             - name: dbHost
               valueFrom:
                 configMapKeyRef:
