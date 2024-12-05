@@ -28,27 +28,27 @@ spec:
             - name: dbHost
               valueFrom:
                 configMapKeyRef:
-                  name: j00_db
+                  name: j00-db
                   key: dbHost
             - name: dbUser
               valueFrom:
                 configMapKeyRef:
-                  name: j00_db
+                  name: j00-db
                   key: dbUser
             - name: dbPassword
               valueFrom:
                 configMapKeyRef:
-                  name: j00_db
+                  name: j00-db
                   key: dbPassword
             - name: dbPort
               valueFrom:
                 configMapKeyRef:
-                  name: j00_db
+                  name: j00-db
                   key: dbPort
             - name: dbName
               valueFrom:
                 configMapKeyRef:
-                  name: j00_db
+                  name: j00-db
                   key: dbName
 ---
 apiVersion: v1
