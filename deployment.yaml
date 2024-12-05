@@ -24,6 +24,32 @@ spec:
           ports:
             - containerPort: 5000
               name: j00
+            env:
+            - name: dbHost
+              valueFrom:
+                configMapKeyRef:
+                  name: j00_db
+                  key: dbHost
+            - name: dbUser
+              valueFrom:
+                configMapKeyRef:
+                  name: j00_db
+                  key: dbUser
+            - name: dbPassword
+              valueFrom:
+                configMapKeyRef:
+                  name: j00_db
+                  key: dbPassword
+            - name: dbPort
+              valueFrom:
+                configMapKeyRef:
+                  name: j00_db
+                  key: dbPort
+            - name: dbName
+              valueFrom:
+                configMapKeyRef:
+                  name: j00_db
+                  key: dbName
 ---
 apiVersion: v1
 kind: Service
