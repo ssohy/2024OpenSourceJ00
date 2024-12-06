@@ -12,17 +12,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage("Install dependencies and test DB connection") {
-            steps {
-                script {
-                    // npm install을 실행하여 필요한 패키지 설치
-                    sh 'npm install'
-                    
-                    // DB 연결 테스트 스크립트 실행 (db_connect.js에서 로그 출력)
-                    sh 'node -e "require(\'./db/db_connect.js\');"'
-                }
-            }
-        }
         stage("Build image") {
             steps {
                 script {
@@ -44,7 +33,7 @@ pipeline {
             when {
                 branch 'main'
             }
-            steps {
+            steps{
                 sh "sed -i 's/j00:latest/j00:${env.BUILD_ID}/g' deployment.yaml"
                 step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
